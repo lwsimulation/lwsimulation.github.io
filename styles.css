@@ -5,4 +5,17 @@
 @media(max-width:480px){.hero{padding-top:38px}.hero-art{height:345px;object-position:77% center}.hero-copy h1{font-size:46px}.hero-copy h1 span{font-size:33px}.affiliation{font-size:19px;letter-spacing:0}.specialties{font-size:16px}.specialties i{margin:0 4px}.actions{gap:12px}.button{font-size:16px;padding:10px 16px}.secondary{min-width:125px}.research-grid{gap:22px 5px}.research-grid li,.research-grid small{font-size:13px}.round-icon{width:60px;height:60px}.tool-entry strong{font-size:20px}.tool-entry small{font-size:13px}}
 @media(min-width:901px) and (max-height:950px){.hero{background:#fbfcfe}.hero-art{position:absolute;right:0;width:auto;height:100%;object-fit:contain;object-position:right top}}
 @media(min-width:901px) and (max-height:800px){.hero{height:390px}.hero-copy{top:43px}h1{font-size:53px}h1 span{font-size:40px}.affiliation{margin-top:18px}.rule{margin:16px 0 14px}.actions{margin-top:20px}.information{padding-top:23px;padding-bottom:15px}.research-grid{row-gap:12px}}
+.brand-logo{display:block;width:80px;height:48px}
+#contact-dialog{width:460px;padding:38px 36px 24px;background:#fff}
+.contact-label{display:block;font:11px var(--sans);letter-spacing:3px;color:var(--muted);margin-bottom:13px}
+#contact-title{font-size:29px;margin-bottom:12px}
+#contact-note{font-size:16px;color:var(--muted);margin:0 0 27px}
+.email-label{display:block;font:13px var(--sans);color:#66758b;margin-bottom:9px}
+#contact-email{display:block;width:100%;border:1px solid var(--line);border-radius:5px;background:#f7f9fc;color:var(--ink);font:20px var(--sans);padding:16px 14px;user-select:all}
+#contact-email:focus{outline:2px solid #6b86ab;outline-offset:2px}
+.contact-actions{display:flex;gap:25px;align-items:center;margin-top:22px}
+.contact-actions .button{font:15px var(--sans);min-height:45px;padding:10px 18px}
+.email-link{font-size:16px;text-decoration:none;white-space:nowrap}
+#copy-status{min-height:22px;margin:17px 0 0;font:13px/1.6 var(--sans);color:#54715d}
+@media(max-width:480px){#contact-dialog{padding:33px 23px 19px}.brand-logo{width:67px;height:40px}#contact-email{font-size:18px;padding:14px 11px}.contact-actions{gap:20px}.contact-actions .button{font-size:14px;padding:10px 14px}.email-link{font-size:15px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
