@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="刘万锁个人主页｜CFD、真空工程、多物理场与AI工程仿真" />
+  <title>刘万锁 Wansuo Liu | WS Multiphysics</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#home"><strong>刘万锁</strong><span>Wansuo Liu</span></a>
+    <nav class="nav">
+      <a class="active" href="#home">首页</a>
+      <a href="#research">研究方向</a>
+      <a href="#publications">论文成果</a>
+      <a href="#projects">项目经历</a>
+      <a href="#resources">资源与工具</a>
+      <a href="#service">学术服务</a>
+      <a href="#about">关于我</a>
+    </nav>
+    <div class="actions"><span class="search">⌕</span><span>中文</span><i>|</i><span>EN</span></div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-copy">
+        <p class="kicker">RESEARCH FOR A COMPLEX WORLD</p>
+        <div class="rule short"></div>
+        <h1>刘万锁<span>Wansuo Liu</span></h1>
+        <div class="identity">
+          <p>辽宁科技大学 · 特聘副教授</p>
+          <p>Juno · 超算中心主任</p>
+        </div>
+        <div class="rule short"></div>
+        <p class="fields">CFD <em>/</em> Vacuum Engineering <em>/</em> Multiphysics <em>/</em> AI for Simulation</p>
+        <div class="cta-row">
+          <a class="btn primary" href="#research">▣　查看我的研究</a>
+          <a class="btn ghost" href="#contact">✉　联系我</a>
+        </div>
+      </div>
+
+      <div class="hero-image" aria-label="个人形象与水坝背景占位区域">
+        <div class="mountain m1"></div>
+        <div class="mountain m2"></div>
+        <div class="dam"><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="water"></div>
+        <div class="portrait-placeholder">
+          <div class="head"></div>
+          <div class="body"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="overview">
+      <article class="panel about" id="about">
+        <div class="panel-title"><span class="line-icon">♙</span><h2>个人简介 <small>About Me</small></h2></div>
+        <p>长期从事计算流体力学、真空工程及多物理场数值模拟相关研究，关注复杂流动过程中的物理机理、跨流态输运与工程设计问题，并探索人工智能与数值仿真结合的工程设计与优化方法。</p>
+        <div class="motto"><span></span><b>— 求真务实 · 模拟世界 · 创造可能</b><small>SIMULATE A BETTER TOMORROW</small></div>
+      </article>
+
+      <article class="panel research" id="research">
+        <div class="panel-title"><span class="line-icon">◇</span><h2>研究方向 <small>Research Interests</small></h2></div>
+        <div class="research-grid">
+          <div class="research-item"><div class="circle">≋</div><b>计算流体力学</b><span>CFD</span></div>
+          <div class="research-item"><div class="circle">◴</div><b>真空与跨流态输运</b><span>Vacuum Engineering</span></div>
+          <div class="research-item"><div class="circle">◇</div><b>多物理场耦合</b><span>Multiphysics</span></div>
+          <div class="research-item"><div class="circle">▦</div><b>半导体工艺装备仿真</b><span>Semiconductor Simulation</span></div>
+          <div class="research-item"><div class="circle">✣</div><b>AI + Engineering</b><span>Simulation</span></div>
+        </div>
+      </article>
+
+      <article class="panel tools" id="resources">
+        <div class="panel-title"><span class="line-icon">⚒</span><h2>工具与资源 <small>Tools</small></h2></div>
+        <a class="tool-card" href="#tools"><div class="tool-symbol">◇</div><div><b>进入工具页面</b><span>仿真工具 · 数据处理 · 计算资源 · 实用脚本</span></div><strong>→</strong></a>
+        <div class="tool-rule"></div>
+      </article>
+    </section>
+
+    <section class="detail" id="publications"><h2>论文成果</h2><p>后续补充代表论文、专著与研究成果。</p></section>
+    <section class="detail" id="projects"><h2>项目经历</h2><p>后续补充科研项目与工程案例。</p></section>
+    <section class="detail" id="tools"><h2>资源与工具</h2><p>后续加入 OpenFOAM、Fluent、COMSOL、Python、C++ 及高性能计算相关内容。</p></section>
+    <section class="detail" id="service"><h2>学术服务</h2><p>后续补充教学、合作与学术服务内容。</p></section>
+    <section class="detail" id="contact"><h2>联系我</h2><p>联系方式将在确认后加入。</p></section>
+  </main>
+
+  <script>
+    const links=[...document.querySelectorAll('.nav a')];
+    links.forEach(a=>a.addEventListener('click',()=>{links.forEach(x=>x.classList.remove('active'));a.classList.add('active')}));
+  </script>
+</body>
+</html>
