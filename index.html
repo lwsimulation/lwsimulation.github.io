@@ -3,14 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="刘万锁个人主页｜CFD、真空工程、多物理场与AI工程仿真" />
+  <meta name="description" content="刘万锁个人主页｜计算流体力学、真空工程、多物理场与AI工程仿真" />
+  <meta name="theme-color" content="#f7f9fc" />
   <title>刘万锁 Wansuo Liu | WS Multiphysics</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="#home"><strong>刘万锁</strong><span>Wansuo Liu</span></a>
-    <nav class="nav">
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="刘万锁个人主页">
+      <strong>刘万锁</strong>
+      <span>Wansuo Liu</span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="主导航">
       <a class="active" href="#home">首页</a>
       <a href="#research">研究方向</a>
       <a href="#publications">论文成果</a>
@@ -19,74 +24,216 @@
       <a href="#service">学术服务</a>
       <a href="#about">关于我</a>
     </nav>
-    <div class="actions"><span class="search">⌕</span><span>中文</span><i>|</i><span>EN</span></div>
+
+    <div class="header-tools">
+      <span class="vline"></span>
+      <button class="icon-button" aria-label="搜索">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg>
+      </button>
+      <span class="vline"></span>
+      <button class="language is-current">中文</button>
+      <span class="language-sep">|</span>
+      <button class="language">EN</button>
+    </div>
   </header>
 
   <main>
     <section class="hero" id="home">
-      <div class="hero-copy">
-        <p class="kicker">RESEARCH FOR A COMPLEX WORLD</p>
-        <div class="rule short"></div>
-        <h1>刘万锁<span>Wansuo Liu</span></h1>
-        <div class="identity">
-          <p>辽宁科技大学 · 特聘副教授</p>
-          <p>Juno · 超算中心主任</p>
-        </div>
-        <div class="rule short"></div>
-        <p class="fields">CFD <em>/</em> Vacuum Engineering <em>/</em> Multiphysics <em>/</em> AI for Simulation</p>
-        <div class="cta-row">
-          <a class="btn primary" href="#research">▣　查看我的研究</a>
-          <a class="btn ghost" href="#contact">✉　联系我</a>
-        </div>
-      </div>
+      <div class="hero-bg" aria-hidden="true"></div>
+      <div class="hero-wash" aria-hidden="true"></div>
 
-      <div class="hero-image" aria-label="个人形象与水坝背景占位区域">
-        <div class="mountain m1"></div>
-        <div class="mountain m2"></div>
-        <div class="dam"><span></span><span></span><span></span><span></span><span></span></div>
-        <div class="water"></div>
-        <div class="portrait-placeholder">
-          <div class="head"></div>
-          <div class="body"></div>
+      <div class="hero-content">
+        <div class="hero-copy">
+          <p class="eyebrow">RESEARCH FOR A COMPLEX WORLD</p>
+          <span class="mini-rule"></span>
+
+          <h1>
+            <span class="cn-name">刘万锁</span>
+            <span class="en-name">Wansuo Liu</span>
+          </h1>
+
+          <div class="identity">
+            <p>辽宁科技大学 · 特聘副教授</p>
+            <p>Juno · 超算中心主任</p>
+          </div>
+
+          <span class="mini-rule identity-rule"></span>
+
+          <p class="fields">
+            <span>CFD</span><i>/</i>
+            <span>Vacuum Engineering</span><i>/</i>
+            <span>Multiphysics</span><i>/</i>
+            <span>AI for Simulation</span>
+          </p>
+
+          <div class="hero-buttons">
+            <a class="btn btn-primary" href="#research">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.5h10l4 4V21H5z"></path><path d="M15 3.5V8h4M9 12h6M9 16h6"></path></svg>
+              <span>查看我的研究</span>
+              <span class="btn-arrow">→</span>
+            </a>
+            <a class="btn btn-secondary" href="#contact">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="1"></rect><path d="m4 7 8 6 8-6"></path></svg>
+              <span>联系我</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="portrait-zone">
+          <div class="portrait-glow" aria-hidden="true"></div>
+          <div class="portrait-card">
+            <img src="https://avatars.githubusercontent.com/u/82750651?v=4" alt="刘万锁" />
+          </div>
+          <div class="portrait-caption">
+            <span>COMPUTATION · PHYSICS · ENGINEERING</span>
+            <strong>From mechanism to engineering design</strong>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="overview">
-      <article class="panel about" id="about">
-        <div class="panel-title"><span class="line-icon">♙</span><h2>个人简介 <small>About Me</small></h2></div>
-        <p>长期从事计算流体力学、真空工程及多物理场数值模拟相关研究，关注复杂流动过程中的物理机理、跨流态输运与工程设计问题，并探索人工智能与数值仿真结合的工程设计与优化方法。</p>
-        <div class="motto"><span></span><b>— 求真务实 · 模拟世界 · 创造可能</b><small>SIMULATE A BETTER TOMORROW</small></div>
+    <section class="overview" aria-label="个人主页概览">
+      <article class="overview-column about-column" id="about">
+        <div class="section-heading">
+          <span class="heading-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="3.7"></circle><path d="M4.5 21v-2.2a7.5 7.5 0 0 1 15 0V21"></path></svg>
+          </span>
+          <h2>个人简介 <small>About Me</small></h2>
+        </div>
+
+        <p class="intro-copy">长期从事计算流体力学、真空工程及多物理场数值模拟相关研究，关注复杂流动过程中的物理机理、跨流态输运与工程设计问题，并探索人工智能与数值仿真结合的工程设计与优化方法。</p>
+
+        <div class="motto">
+          <span class="motto-line"></span>
+          <p>— 求真务实 · 模拟世界 · 创造可能</p>
+          <small>SIMULATE A BETTER TOMORROW</small>
+        </div>
       </article>
 
-      <article class="panel research" id="research">
-        <div class="panel-title"><span class="line-icon">◇</span><h2>研究方向 <small>Research Interests</small></h2></div>
+      <article class="overview-column research-column" id="research">
+        <div class="section-heading">
+          <span class="heading-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5z"></path><path d="m4 12.5 8 4.5 8-4.5M4 17l8 4 8-4"></path></svg>
+          </span>
+          <h2>研究方向 <small>Research Interests</small></h2>
+        </div>
+
         <div class="research-grid">
-          <div class="research-item"><div class="circle">≋</div><b>计算流体力学</b><span>CFD</span></div>
-          <div class="research-item"><div class="circle">◴</div><b>真空与跨流态输运</b><span>Vacuum Engineering</span></div>
-          <div class="research-item"><div class="circle">◇</div><b>多物理场耦合</b><span>Multiphysics</span></div>
-          <div class="research-item"><div class="circle">▦</div><b>半导体工艺装备仿真</b><span>Semiconductor Simulation</span></div>
-          <div class="research-item"><div class="circle">✣</div><b>AI + Engineering</b><span>Simulation</span></div>
+          <div class="research-item">
+            <div class="research-icon waves"><span></span><span></span><span></span></div>
+            <strong>计算流体力学</strong>
+            <small>CFD</small>
+          </div>
+
+          <div class="research-item">
+            <div class="research-icon gauge">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M12 12l4-4M12 5v2M5 12h2M17 12h2M12 17v2"></path></svg>
+            </div>
+            <strong>真空与跨流态输运</strong>
+            <small>Vacuum Engineering</small>
+          </div>
+
+          <div class="research-item">
+            <div class="research-icon cube">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9z"></path><path d="m4 7.5 8 4.5 8-4.5M12 12v9"></path></svg>
+            </div>
+            <strong>多物理场耦合</strong>
+            <small>Multiphysics</small>
+          </div>
+
+          <div class="research-item lower-item">
+            <div class="research-icon chip">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="1"></rect><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"></path><rect x="10" y="10" width="4" height="4"></rect></svg>
+            </div>
+            <strong>半导体工艺装备仿真</strong>
+            <small>Semiconductor Simulation</small>
+          </div>
+
+          <div class="research-item lower-item">
+            <div class="research-icon ai">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5a3 3 0 0 0-5 2 3 3 0 0 0 1 5 3 3 0 0 0 4 4M15 5a3 3 0 0 1 5 2 3 3 0 0 1-1 5 3 3 0 0 1-4 4M9 5v14M15 5v14M9 9H7M15 9h2M9 14H7M15 14h2"></path></svg>
+            </div>
+            <strong>AI + Engineering</strong>
+            <small>Simulation</small>
+          </div>
         </div>
       </article>
 
-      <article class="panel tools" id="resources">
-        <div class="panel-title"><span class="line-icon">⚒</span><h2>工具与资源 <small>Tools</small></h2></div>
-        <a class="tool-card" href="#tools"><div class="tool-symbol">◇</div><div><b>进入工具页面</b><span>仿真工具 · 数据处理 · 计算资源 · 实用脚本</span></div><strong>→</strong></a>
-        <div class="tool-rule"></div>
+      <article class="overview-column tools-column" id="resources">
+        <div class="section-heading">
+          <span class="heading-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6 4-4 4 4-4 4"></path><path d="m10 14-6 6M12 4l8 8M4 12l8 8"></path></svg>
+          </span>
+          <h2>工具与资源 <small>Tools</small></h2>
+        </div>
+
+        <a class="tool-card" href="#tools">
+          <span class="tool-card-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9z"></path><path d="m4 7.5 8 4.5 8-4.5M12 12v9"></path></svg>
+          </span>
+          <span class="tool-card-copy">
+            <strong>进入工具页面</strong>
+            <small>仿真工具 · 数据处理 · 计算资源 · 实用脚本</small>
+          </span>
+          <span class="tool-arrow">→</span>
+        </a>
+
+        <div class="tool-list">
+          <span>OpenFOAM</span>
+          <span>Fluent</span>
+          <span>COMSOL</span>
+          <span>Python</span>
+          <span>C++</span>
+          <span>Linux / HPC</span>
+        </div>
       </article>
     </section>
 
-    <section class="detail" id="publications"><h2>论文成果</h2><p>后续补充代表论文、专著与研究成果。</p></section>
-    <section class="detail" id="projects"><h2>项目经历</h2><p>后续补充科研项目与工程案例。</p></section>
-    <section class="detail" id="tools"><h2>资源与工具</h2><p>后续加入 OpenFOAM、Fluent、COMSOL、Python、C++ 及高性能计算相关内容。</p></section>
-    <section class="detail" id="service"><h2>学术服务</h2><p>后续补充教学、合作与学术服务内容。</p></section>
-    <section class="detail" id="contact"><h2>联系我</h2><p>联系方式将在确认后加入。</p></section>
+    <section class="content-section" id="publications">
+      <p class="content-kicker">PUBLICATIONS</p>
+      <h2>论文成果</h2>
+      <p>代表论文与出版成果将逐步整理到此页面。</p>
+    </section>
+
+    <section class="content-section" id="projects">
+      <p class="content-kicker">PROJECTS</p>
+      <h2>项目经历</h2>
+      <p>后续将加入 PECVD、PVD、多流口分子泵、核聚变流场与工程仿真案例。</p>
+    </section>
+
+    <section class="content-section" id="tools">
+      <p class="content-kicker">TOOLS & RESOURCES</p>
+      <h2>资源与工具</h2>
+      <p>后续建立仿真软件、高性能计算、实用脚本与数据处理资源页面。</p>
+    </section>
+
+    <section class="content-section" id="service">
+      <p class="content-kicker">ACADEMIC SERVICE</p>
+      <h2>学术服务</h2>
+      <p>教学、合作研究与学术服务内容将在此更新。</p>
+    </section>
+
+    <section class="content-section contact-section" id="contact">
+      <p class="content-kicker">CONTACT</p>
+      <h2>联系我</h2>
+      <p>联系方式确认后加入。</p>
+    </section>
   </main>
 
+  <footer class="site-footer">
+    <span>© 2026 Wansuo Liu · WS Multiphysics</span>
+    <span>Dam background: U.S. Army Corps of Engineers, Public Domain</span>
+  </footer>
+
   <script>
-    const links=[...document.querySelectorAll('.nav a')];
-    links.forEach(a=>a.addEventListener('click',()=>{links.forEach(x=>x.classList.remove('active'));a.classList.add('active')}));
+    const navLinks = [...document.querySelectorAll('.desktop-nav a')];
+    const observedSections = [...document.querySelectorAll('main section[id], main article[id]')];
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter(e => e.isIntersecting).sort((a,b) => b.intersectionRatio-a.intersectionRatio)[0];
+      if (!visible) return;
+      navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === '#' + visible.target.id));
+    }, { threshold: [0.2,0.45], rootMargin: '-15% 0px -65% 0px' });
+    observedSections.forEach(section => observer.observe(section));
   </script>
 </body>
 </html>
