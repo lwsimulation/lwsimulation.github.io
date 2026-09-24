@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>我的研究 | lwSimulation</title>
-  <meta name="description" content="PECVD 喷淋板、跨流态输运与多物理场研究的交互式示意。">
+  <meta name="description" content="PECVD 腔室中的流动、温度、结构、等离子体与化学反应多场叠加交互示意。">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css?v=20260924-2">
   <link rel="stylesheet" href="brand.css?v=20260924-1">
-  <link rel="stylesheet" href="research.css?v=20260924-2">
+  <link rel="stylesheet" href="research.css?v=20260924-3">
   <script type="importmap">{"imports":{"three":"./assets/vendor/three.module.min.js"}}</script>
 </head>
 <body class="research-page">
@@ -18,56 +18,32 @@
   </header>
 
   <main class="research-main">
-    <aside class="research-controls" aria-label="模型控制">
-      <div class="eyebrow">PECVD · SHOWERHEAD TRANSPORT</div>
-      <h1>从喷淋板微通道<br>到腔室输运</h1>
-      <p class="intro">以喷淋板孔分布、气体输运和多物理场耦合为核心的交互式概念模型。</p>
+    <section class="research-stage" aria-label="PECVD 多物理场交互腔室">
+      <div class="research-title"><span>PECVD CHAMBER</span><strong>多场叠加</strong></div>
+      <div class="flow-badge"><span class="live-dot"></span><span>FLOW</span></div>
 
-      <section class="control-section" aria-labelledby="density-title">
-        <div class="section-heading"><h2 id="density-title">喷淋板孔密度</h2><output id="density-value">基准 · 42 孔</output></div>
-        <p class="control-note">固定孔径，通过改变孔数与分布观察射流覆盖变化。</p>
-        <input id="hole-density" type="range" min="0" max="2" step="1" value="1" aria-label="喷淋板孔密度">
-        <div class="range-labels"><span>稀疏</span><span>基准</span><span>高密</span></div>
-      </section>
-
-      <section class="control-section" aria-labelledby="physics-title">
-        <div class="section-heading"><h2 id="physics-title">物理因素</h2><span id="field-count">0 / 2</span></div>
-        <p class="control-note">可独立开启，用于观察定性变化。</p>
-        <div class="field-buttons">
-          <button type="button" data-field="thermal" aria-pressed="false"><span class="field-icon thermal">T</span><span><strong>温度场</strong><small>热边界 · 射流展宽</small></span><span class="toggle-mark" aria-hidden="true">+</span></button>
-          <button type="button" data-field="plasma" aria-pressed="false"><span class="field-icon plasma">E</span><span><strong>等离子体耦合</strong><small>带电粒子输运示意</small></span><span class="toggle-mark" aria-hidden="true">+</span></button>
-        </div>
-      </section>
-
-      <section class="control-section flow-control">
-        <label for="flow-rate">总入口流量 <output id="flow-value" for="flow-rate">1.0×</output></label>
-        <input id="flow-rate" type="range" min="0.5" max="1.8" step="0.1" value="1">
-        <div class="range-labels"><span>低</span><span>基准</span><span>高</span></div>
-      </section>
-
-      <p class="field-description" id="field-description" aria-live="polite">基础状态：气体自顶部进入，经喷淋板微孔分流形成多股射流，并在基片上方重新分布后排出。</p>
-      <p class="model-note">概念流动示意，非 CFD/DSMC 求解。孔密度比较采用“孔径固定、总入口流量固定”的展示假设，因此用于观察射流覆盖趋势，不代表定压边界下的真实质量流率变化。</p>
-    </aside>
-
-    <section class="research-stage" aria-label="三维 PECVD 沉积腔室">
-      <div class="stage-top"><span class="live-dot"></span><span id="flow-status">流动演示</span><span class="stage-caption">透明腔室 / 三维视图</span></div>
-      <div id="viewport" tabindex="0" role="group" aria-label="三维沉积腔室。拖拽旋转视角，滚轮缩放。" aria-describedby="interaction-hint">
-        <div id="loading" role="status">正在构建三维腔室…</div>
-        <div id="render-error" hidden><strong>暂时无法显示三维视图</strong><p>请使用支持 WebGL 2 的浏览器并开启图形加速后重新加载。</p><button type="button" id="reload">重新加载</button></div>
-        <span class="part-label" data-label="inlet">入口 <i>INLET</i></span>
-        <span class="part-label" data-label="shower">喷淋板 <i>SHOWERHEAD</i></span>
-        <span class="part-label" data-label="wafer">基片 <i>SUBSTRATE</i></span>
-        <span class="part-label" data-label="outlet">排气 <i>EXHAUST</i></span>
+      <div id="viewport" tabindex="0" role="group" aria-label="三维 PECVD 沉积腔室。拖拽旋转视角，滚轮缩放。" aria-describedby="interaction-hint">
+        <div id="loading" role="status">正在构建腔室…</div>
+        <div id="render-error" hidden><strong>三维视图暂时无法显示</strong><p>请开启浏览器图形加速后重新加载。</p><button type="button" id="reload">重新加载</button></div>
       </div>
-      <div class="stage-bottom">
-        <div class="legend"><span>相对流速</span><div class="color-ramp"></div><div class="legend-labels"><span>低</span><span>高</span></div></div>
-        <div class="view-actions"><button type="button" id="pause" aria-pressed="false">暂停流动</button><button type="button" id="reset">重置视角</button></div>
+
+      <div class="field-dock" role="group" aria-label="多物理场叠加">
+        <button type="button" data-field="thermal" aria-pressed="false" title="温度场：近壁热边界改变局部流动"><span class="field-symbol">T</span><span>温度</span></button>
+        <button type="button" data-field="structure" aria-pressed="false" title="结构场：喷淋板孔隙形成离散射流并改变局部分布"><span class="field-symbol">S</span><span>结构</span></button>
+        <button type="button" data-field="plasma" aria-pressed="false" title="等离子体场：显示带电粒子与鞘层作用区域"><span class="field-symbol">P</span><span>等离子体</span></button>
+        <button type="button" data-field="chemistry" aria-pressed="false" title="化学反应场：显示基片上方反应活跃区与物种变化"><span class="field-symbol">R</span><span>化学反应</span></button>
       </div>
-      <p class="interaction-hint" id="interaction-hint">拖拽旋转 · 滚轮缩放 · 方向键旋转</p>
+
+      <div class="view-actions">
+        <button type="button" id="pause" aria-pressed="false" title="暂停或继续粒子运动">暂停</button>
+        <button type="button" id="reset" title="恢复默认视角">复位</button>
+      </div>
+      <p class="interaction-hint" id="interaction-hint">拖拽旋转 · 滚轮缩放</p>
+      <p class="concept-note">概念示意 · 非 CFD/DSMC 求解结果</p>
     </section>
   </main>
 
   <noscript><p class="noscript">请启用 JavaScript 以查看三维交互演示。</p></noscript>
-  <script type="module" src="research.js?v=20260924-2"></script>
+  <script type="module" src="research.js?v=20260924-3"></script>
 </body>
 </html>
