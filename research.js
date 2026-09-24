@@ -10,53 +10,55 @@ try {
 } catch (error) {
   loading.hidden = true;
   errorPanel.hidden = false;
-  document.querySelectorAll('.research-controls button,.research-controls input,.view-actions button').forEach(el => el.disabled = true);
+  document.querySelectorAll('.field-dock button,.view-actions button').forEach(el => el.disabled = true);
   console.error('Research chamber could not start:', error);
 }
 
 function start(T, OrbitControls) {
   const renderer = new T.WebGLRenderer({ antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
-  renderer.setClearColor(0xf1f6fb, 0);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.8));
+  renderer.setClearColor(0xf3f7fb, 0);
   renderer.outputColorSpace = T.SRGBColorSpace;
   viewport.prepend(renderer.domElement);
   renderer.domElement.setAttribute('aria-hidden', 'true');
 
   const scene = new T.Scene();
-  const camera = new T.PerspectiveCamera(40, 1, 0.1, 70);
+  const camera = new T.PerspectiveCamera(38, 1, 0.1, 70);
   const controls = new OrbitControls(camera, viewport);
   controls.enableDamping = true;
-  controls.dampingFactor = 0.08;
+  controls.dampingFactor = 0.075;
   controls.enablePan = false;
   controls.minDistance = 6;
-  controls.maxDistance = 24;
+  controls.maxDistance = 22;
   controls.minPolarAngle = 0.18;
   controls.maxPolarAngle = Math.PI - 0.18;
-  controls.target.set(0, 0, 0);
+  controls.target.set(0, -0.1, 0);
 
-  const homeDirection = new T.Vector3(7, 4.2, 9).normalize();
+  const homeDirection = new T.Vector3(7.2, 4.4, 9.4).normalize();
   function resetView() {
-    camera.position.copy(homeDirection).multiplyScalar(Math.max(11.8, 8.8 / camera.aspect));
-    controls.target.set(0, 0, 0);
+    const distance = camera.aspect < 1 ? 13.6 : camera.aspect < 1.45 ? 12.4 : 11.5;
+    camera.position.copy(homeDirection).multiplyScalar(distance);
+    controls.target.set(0, -0.1, 0);
     controls.update();
   }
 
   const resize = new ResizeObserver(() => {
     const width = viewport.clientWidth;
     const height = viewport.clientHeight;
+    if (!width || !height) return;
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
     renderer.setSize(width, height, false);
   });
   resize.observe(viewport);
 
-  scene.add(new T.HemisphereLight(0xffffff, 0xb8c7d8, 2.8));
+  scene.add(new T.HemisphereLight(0xffffff, 0xb4c4d4, 2.8));
   const key = new T.DirectionalLight(0xffffff, 3.2); key.position.set(5, 8, 6); scene.add(key);
-  const rim = new T.DirectionalLight(0xb8d6ef, 1.8); rim.position.set(-5, 2, -4); scene.add(rim);
+  const rim = new T.DirectionalLight(0xb7d7ef, 1.7); rim.position.set(-5, 2, -4); scene.add(rim);
 
-  const metal = new T.MeshStandardMaterial({ color: 0x6687a5, metalness: 0.55, roughness: 0.34 });
-  const glass = new T.MeshPhysicalMaterial({ color: 0xb8d5e8, transparent: true, opacity: 0.10, roughness: 0.16, metalness: 0.05, side: T.DoubleSide, depthWrite: false });
-  const wire = new T.MeshBasicMaterial({ color: 0x6f93b4, transparent: true, opacity: 0.60 });
+  const metal = new T.MeshStandardMaterial({ color: 0x6c8eaa, metalness: 0.56, roughness: 0.34 });
+  const glass = new T.MeshPhysicalMaterial({ color: 0xb9d6e9, transparent: true, opacity: 0.095, roughness: 0.14, metalness: 0.04, side: T.DoubleSide, depthWrite: false });
+  const wire = new T.MeshBasicMaterial({ color: 0x7899b6, transparent: true, opacity: 0.58 });
 
   function mesh(geometry, material, y = 0, parent = scene) {
     const object = new T.Mesh(geometry, material);
@@ -80,7 +82,7 @@ function start(T, OrbitControls) {
     if (object.parent) object.parent.remove(object);
   }
 
-  // Chamber shell and exhaust geometry.
+  // Chamber shell.
   mesh(new T.CylinderGeometry(2, 2, 3.8, 96, 1, true), glass);
   mesh(new T.CylinderGeometry(2, 0.32, 0.7, 96, 1, true), glass, -2.25);
   mesh(new T.CylinderGeometry(0.29, 0.29, 1.2, 48, 1, true), glass, 2.5);
@@ -90,93 +92,118 @@ function start(T, OrbitControls) {
   for (const y of [-2.6, -3.25]) ring(0.32, y, 0.035, metal);
   mesh(new T.CylinderGeometry(2, 2, 0.045, 96), glass, 1.9);
 
-  // Wafer remains stationary. Rotation is intentionally not used as a research variable.
+  // Fixed showerhead geometry: 42 pores. Structure mode highlights their transport influence rather than changing the design itself.
+  const holes = [];
+  for (const [radius, count] of [[0.42, 8], [0.94, 14], [1.48, 20]]) {
+    for (let i = 0; i < count; i++) {
+      const angle = i / count * Math.PI * 2;
+      holes.push({ radius, angle, x: radius * Math.cos(angle), z: radius * Math.sin(angle) });
+    }
+  }
+  const plateShape = new T.Shape();
+  plateShape.absarc(0, 0, 1.84, 0, Math.PI * 2, false);
+  for (const hole of holes) {
+    const path = new T.Path();
+    path.absarc(hole.x, -hole.z, 0.066, 0, Math.PI * 2, true);
+    plateShape.holes.push(path);
+  }
+  const plateGeometry = new T.ExtrudeGeometry(plateShape, { depth: 0.10, bevelEnabled: false, curveSegments: 7 });
+  plateGeometry.rotateX(-Math.PI / 2);
+  const plateMaterial = new T.MeshStandardMaterial({ color: 0x7898b2, metalness: 0.48, roughness: 0.40, transparent: true, opacity: 0.76 });
+  mesh(plateGeometry, plateMaterial, 1.10);
+  ring(1.84, 1.15, 0.04, metal);
+
+  // Pore markers used only when the structure field is switched on.
+  const poreGroup = new T.Group();
+  scene.add(poreGroup);
+  const poreMaterial = new T.MeshBasicMaterial({ color: 0x4f81b2, transparent: true, opacity: 0.82, depthWrite: false });
+  for (const hole of holes) {
+    const glow = new T.Mesh(new T.TorusGeometry(0.081, 0.009, 5, 18), poreMaterial);
+    glow.position.set(hole.x, 1.165, hole.z);
+    glow.rotation.x = Math.PI / 2;
+    poreGroup.add(glow);
+  }
+  poreGroup.visible = false;
+
+  // Substrate.
   const wafer = new T.Group(); wafer.position.y = -1.05; scene.add(wafer);
   const waferMaterial = new T.MeshStandardMaterial({ color: 0x4b6d8b, metalness: 0.55, roughness: 0.27, emissive: 0x000000 });
   mesh(new T.CylinderGeometry(1.35, 1.35, 0.12, 96), waferMaterial, 0, wafer);
   ring(1.35, 0.06, 0.025, wire, wafer);
-  const traceMaterial = new T.MeshBasicMaterial({ color: 0x6c9abf, transparent: true, opacity: 0.25 });
+  const traceMaterial = new T.MeshBasicMaterial({ color: 0x6c9abf, transparent: true, opacity: 0.24 });
   for (const radius of [0.45, 0.9, 1.21]) ring(radius, 0.065, 0.006, traceMaterial, wafer);
-
   for (const angle of [Math.PI * 1.15, Math.PI * 1.85]) {
     const support = mesh(new T.CylinderGeometry(0.045, 0.045, 0.75, 12), metal, -1.48);
     support.position.x = 1.15 * Math.cos(angle);
     support.position.z = 1.15 * Math.sin(angle);
   }
 
-  const thermalHalo = ring(1.48, -1.04, 0.055, new T.MeshBasicMaterial({ color: 0xd58a50, transparent: true, opacity: 0.50 }));
-  thermalHalo.visible = false;
+  // Temperature field: restrained near-wall heat signature.
+  const thermalMaterial = new T.MeshBasicMaterial({ color: 0xd18047, transparent: true, opacity: 0.44, depthWrite: false });
+  const thermalHalo = ring(1.48, -1.04, 0.055, thermalMaterial);
+  const thermalHalo2 = ring(1.10, -0.92, 0.018, new T.MeshBasicMaterial({ color: 0xe5a66d, transparent: true, opacity: 0.28, depthWrite: false }));
+  thermalHalo.visible = thermalHalo2.visible = false;
 
+  // Plasma field: field lines only. It does not directly force the neutral-gas streamlines in this concept model.
   const plasmaGroup = new T.Group(); scene.add(plasmaGroup); plasmaGroup.visible = false;
-  for (let i = 0; i < 8; i++) {
-    const a = i * Math.PI / 4;
-    plasmaGroup.add(new T.ArrowHelper(new T.Vector3(0, -1, 0), new T.Vector3(1.72 * Math.cos(a), 0.65, 1.72 * Math.sin(a)), 1.0, 0x7a70b8, 0.12, 0.06));
+  const plasmaLineMaterial = new T.LineBasicMaterial({ color: 0x7569b4, transparent: true, opacity: 0.42, depthWrite: false });
+  for (let i = 0; i < 14; i++) {
+    const a = i / 14 * Math.PI * 2;
+    const r = 0.45 + (i % 3) * 0.42;
+    const points = [new T.Vector3(r * Math.cos(a), 0.62, r * Math.sin(a)), new T.Vector3(r * 0.82 * Math.cos(a), -0.72, r * 0.82 * Math.sin(a))];
+    const geometry = new T.BufferGeometry().setFromPoints(points);
+    plasmaGroup.add(new T.Line(geometry, plasmaLineMaterial));
   }
+  const plasmaRing = ring(1.48, -0.72, 0.025, new T.MeshBasicMaterial({ color: 0x7569b4, transparent: true, opacity: 0.30, depthWrite: false }), plasmaGroup);
+  plasmaRing.rotation.x = Math.PI / 2;
+
+  // Chemical-reaction field: reaction zone and species markers above the substrate.
+  const chemistryGroup = new T.Group(); scene.add(chemistryGroup); chemistryGroup.visible = false;
+  const reactionMaterial = new T.MeshBasicMaterial({ color: 0xb88748, transparent: true, opacity: 0.28, depthWrite: false, side: T.DoubleSide });
+  mesh(new T.CylinderGeometry(1.42, 1.20, 0.48, 72, 1, true), reactionMaterial, -0.72, chemistryGroup);
+  ring(1.34, -0.92, 0.035, new T.MeshBasicMaterial({ color: 0xc7965a, transparent: true, opacity: 0.45, depthWrite: false }), chemistryGroup);
+  const reactionPositions = [];
+  for (let i = 0; i < 150; i++) {
+    const a = i * 2.399963229728653;
+    const f = ((i * 37) % 149) / 149;
+    const r = 0.16 + 1.15 * Math.sqrt(f);
+    const y = -0.92 + 0.45 * (((i * 53) % 151) / 151);
+    reactionPositions.push(r * Math.cos(a), y, r * Math.sin(a));
+  }
+  const reactionGeometry = new T.BufferGeometry();
+  reactionGeometry.setAttribute('position', new T.Float32BufferAttribute(reactionPositions, 3));
+  const reactionPointsMaterial = new T.PointsMaterial({ color: 0xc99454, size: 0.055, transparent: true, opacity: 0.55, depthWrite: false });
+  const reactionPoints = new T.Points(reactionGeometry, reactionPointsMaterial);
+  chemistryGroup.add(reactionPoints);
+
   const floorGrid = new T.PolarGridHelper(2.9, 12, 4, 96, 0xb9c8d7, 0xd4dee8); floorGrid.position.y = -3.45; scene.add(floorGrid);
 
-  const densityConfigs = [
-    { label: '稀疏 · 30 孔', rings: [[0.55, 6], [1.15, 10], [1.60, 14]] },
-    { label: '基准 · 42 孔', rings: [[0.42, 8], [0.94, 14], [1.48, 20]] },
-    { label: '高密 · 76 孔', rings: [[0.30, 10], [0.72, 16], [1.15, 22], [1.58, 28]] }
-  ];
-
-  let densityIndex = 1;
-  let holes = [];
-  let plateGroup = null;
-  function makeHoles(config) {
-    const result = [];
-    for (const [radius, count] of config.rings) {
-      for (let i = 0; i < count; i++) {
-        const angle = i / count * Math.PI * 2;
-        result.push({ radius, angle, x: radius * Math.cos(angle), z: radius * Math.sin(angle) });
-      }
-    }
-    return result;
-  }
-  function buildShowerhead() {
-    if (plateGroup) disposeObject(plateGroup);
-    plateGroup = new T.Group(); scene.add(plateGroup);
-    holes = makeHoles(densityConfigs[densityIndex]);
-    const plateShape = new T.Shape(); plateShape.absarc(0, 0, 1.84, 0, Math.PI * 2, false);
-    for (const hole of holes) {
-      const path = new T.Path();
-      path.absarc(hole.x, -hole.z, 0.066, 0, Math.PI * 2, true);
-      plateShape.holes.push(path);
-    }
-    const geometry = new T.ExtrudeGeometry(plateShape, { depth: 0.10, bevelEnabled: false, curveSegments: 7 });
-    geometry.rotateX(-Math.PI / 2);
-    const material = new T.MeshStandardMaterial({ color: 0x7898b2, metalness: 0.48, roughness: 0.4, transparent: true, opacity: 0.76 });
-    mesh(geometry, material, 1.1, plateGroup);
-    ring(1.84, 1.15, 0.04, metal, plateGroup);
-  }
-  buildShowerhead();
-
-  const fields = { thermal: false, plasma: false };
-  let rate = 1;
+  const fields = { thermal: false, structure: false, plasma: false, chemistry: false };
   let paused = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const N = 180;
   const PARTICLES_PER_PATH = 6;
   const smooth = x => x * x * (3 - 2 * x);
   const mix = (a, b, t) => a + (b - a) * t;
-  const stops = [0x4774b8, 0x58a7c8, 0x88bfa7, 0xe4c273, 0xd98967].map(c => new T.Color(c));
+  const flowStops = [0x4774b8, 0x58a7c8, 0x88bfa7, 0xe4c273, 0xd98967].map(c => new T.Color(c));
+  const chemistryColor = new T.Color(0xc58b4a);
+
   function speedColor(speed, target = new T.Color()) {
     const t = T.MathUtils.clamp((speed - 0.10) / 2.15, 0, 1) * 4;
     const i = Math.min(3, Math.floor(t));
-    return target.copy(stops[i]).lerp(stops[i + 1], t - i);
+    return target.copy(flowStops[i]).lerp(flowStops[i + 1], t - i);
   }
 
   function sample(t, hole) {
     let r, y, speed;
     const a = hole.angle, h = hole.radius;
-    const perHoleScale = Math.sqrt(42 / holes.length); // qualitative fixed-total-flow normalization
     if (t < 0.14) {
-      const u = t / 0.14; r = 0.13 * h / 1.58; y = mix(3.15, 2.0, u); speed = 0.72;
+      const u = t / 0.14; r = 0.13 * h / 1.48; y = mix(3.15, 2.0, u); speed = 0.72;
     } else if (t < 0.30) {
-      const u = (t - 0.14) / 0.16; r = mix(0.13 * h / 1.58, h, smooth(u)); y = mix(2.0, 1.30, u); speed = mix(0.30, 0.58, u);
+      const u = (t - 0.14) / 0.16; r = mix(0.13 * h / 1.48, h, smooth(u)); y = mix(2.0, 1.30, u); speed = mix(0.30, 0.58, u);
     } else if (t < 0.35) {
-      const u = (t - 0.30) / 0.05; r = h; y = mix(1.30, 1.02, u); speed = mix(0.58, 1.45 * perHoleScale, u);
+      const u = (t - 0.30) / 0.05; r = h; y = mix(1.30, 1.02, u); speed = mix(0.58, 1.45, u);
     } else if (t < 0.64) {
-      const u = (t - 0.35) / 0.29; r = h + 0.045 * smooth(u); y = mix(1.02, -0.65, u); speed = mix(1.45 * perHoleScale, 0.48, smooth(u));
+      const u = (t - 0.35) / 0.29; r = h + 0.045 * smooth(u); y = mix(1.02, -0.65, u); speed = mix(1.45, 0.48, smooth(u));
     } else if (t < 0.76) {
       const u = (t - 0.64) / 0.12; r = mix(h + 0.045, 1.65, smooth(Math.min(1, u / 0.62))); y = mix(-0.65, -1.50, smooth(u)); speed = 0.48;
     } else if (t < 0.93) {
@@ -184,13 +211,23 @@ function start(T, OrbitControls) {
     } else {
       const u = (t - 0.93) / 0.07; r = 0.16; y = mix(-2.65, -3.30, u); speed = 1.25;
     }
+
     const jet = t > 0.35 && t < 0.64 ? Math.sin((t - 0.35) / 0.29 * Math.PI) ** 2 : 0;
-    const chamber = t > 0.35 && t < 0.93 ? Math.sin((t - 0.35) / 0.58 * Math.PI) ** 2 : 0;
-    if (fields.thermal) {
-      r += jet * (0.14 + 0.045 * Math.sin(3 * a + t * 22));
-      speed *= 1 - 0.16 * jet + 0.06 * chamber;
+    const nearWafer = Math.exp(-Math.pow((y + 0.72) / 0.48, 2));
+
+    if (fields.structure) {
+      // Qualitative visualization of pore-driven discrete jets: stronger local acceleration and less immediate smoothing below each pore.
+      const radialWeight = 0.82 + 0.18 * (h / 1.48);
+      speed *= 1 + 0.24 * jet * radialWeight;
+      r += 0.055 * jet * Math.sin(a * 3 + h * 2.2);
     }
-    return { p: new T.Vector3(r * Math.cos(a), y, r * Math.sin(a)), speed: speed * rate };
+    if (fields.thermal) {
+      r += jet * (0.13 + 0.04 * Math.sin(3 * a + t * 20));
+      speed *= 1 - 0.15 * jet + 0.05 * nearWafer;
+    }
+
+    const reaction = fields.chemistry ? nearWafer * (t > 0.50 && t < 0.82 ? 1 : 0) : 0;
+    return { p: new T.Vector3(r * Math.cos(a), y, r * Math.sin(a)), speed, reaction };
   }
 
   const paths = [];
@@ -202,98 +239,76 @@ function start(T, OrbitControls) {
   function buildFlow() {
     paths.length = 0;
     const positions = [], colors = [];
+
     for (const hole of holes) {
-      const points = [], speeds = [], times = [0];
+      const points = [], speeds = [], reactions = [], times = [0];
       for (let i = 0; i <= N; i++) {
         const value = sample(i / N, hole);
-        points.push(value.p); speeds.push(value.speed);
+        points.push(value.p); speeds.push(value.speed); reactions.push(value.reaction);
         if (i) times.push(times[i - 1] + value.p.distanceTo(points[i - 1]) / Math.max(0.08, (speeds[i - 1] + value.speed) * 0.5));
       }
-      paths.push({ points, speeds, times, duration: times[N] });
+      paths.push({ points, speeds, reactions, times, duration: times[N] });
       for (let i = 0; i < N; i++) {
         for (const j of [i, i + 1]) {
-          positions.push(...points[j]); speedColor(speeds[j], color); colors.push(color.r, color.g, color.b);
+          positions.push(...points[j]);
+          speedColor(speeds[j], color);
+          if (fields.chemistry && reactions[j] > 0) color.lerp(chemistryColor, reactions[j] * 0.72);
+          colors.push(color.r, color.g, color.b);
         }
       }
     }
+
     if (streamlines) disposeObject(streamlines);
     const geometry = new T.BufferGeometry();
     geometry.setAttribute('position', new T.Float32BufferAttribute(positions, 3));
     geometry.setAttribute('color', new T.Float32BufferAttribute(colors, 3));
-    streamlines = new T.LineSegments(geometry, new T.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.50, depthWrite: false }));
+    streamlines = new T.LineSegments(geometry, new T.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: fields.structure ? 0.58 : 0.42, depthWrite: false }));
     scene.add(streamlines);
 
     if (particles) disposeObject(particles);
-    const particleCount = holes.length * PARTICLES_PER_PATH;
-    particles = new T.InstancedMesh(new T.SphereGeometry(0.027, 6, 5), new T.MeshBasicMaterial({ color: 0xffffff }), particleCount);
+    particles = new T.InstancedMesh(new T.SphereGeometry(0.027, 6, 5), new T.MeshBasicMaterial({ color: 0xffffff }), holes.length * PARTICLES_PER_PATH);
     particles.instanceMatrix.setUsage(T.DynamicDrawUsage);
     particles.frustumCulled = false;
     scene.add(particles);
 
-    thermalHalo.visible = fields.thermal;
+    poreGroup.visible = fields.structure;
+    thermalHalo.visible = thermalHalo2.visible = fields.thermal;
     plasmaGroup.visible = fields.plasma;
-    waferMaterial.emissive.set(fields.thermal ? 0x3d1b0d : 0x000000);
+    chemistryGroup.visible = fields.chemistry;
+    waferMaterial.emissive.set(fields.thermal ? 0x2f1609 : fields.chemistry ? 0x24170a : 0x000000);
+    reactionPointsMaterial.opacity = fields.plasma && fields.chemistry ? 0.78 : 0.55;
+    reactionMaterial.opacity = fields.plasma && fields.chemistry ? 0.38 : 0.28;
     viewport.dataset.fields = Object.keys(fields).filter(k => fields[k]).join(',');
-    viewport.dataset.holeCount = String(holes.length);
-    viewport.dataset.flowRate = String(rate);
   }
   buildFlow();
 
-  function updateDescription() {
-    const densityText = densityIndex === 0
-      ? '稀疏孔分布使单孔承担的流量比例更高，射流间距更大。'
-      : densityIndex === 2
-        ? '高孔密度增加射流覆盖数量；在总入口流量固定的展示假设下，单孔射流强度相对降低。'
-        : '基准孔分布用于展示喷淋板分流后的多股射流。';
-    const additions = [];
-    if (fields.thermal) additions.push('温度边界通过气体性质和近壁输运改变射流扩散，这里仅展示展宽趋势。');
-    if (fields.plasma) additions.push('等离子体选项仅显示带电粒子受电场作用的方向，不把电场等效为中性气体整体加速。');
-    document.querySelector('#field-description').textContent = densityText + (additions.length ? ' ' + additions.join(' ') : '');
-  }
-
-  document.querySelectorAll('[data-field]').forEach(button => button.addEventListener('click', () => {
-    const name = button.dataset.field;
-    fields[name] = !fields[name];
-    button.setAttribute('aria-pressed', String(fields[name]));
-    button.querySelector('.toggle-mark').textContent = fields[name] ? '−' : '+';
-    document.querySelector('#field-count').textContent = `${Object.values(fields).filter(Boolean).length} / 2`;
-    updateDescription();
-    buildFlow();
-  }));
-
-  document.querySelector('#hole-density').addEventListener('input', event => {
-    densityIndex = Number(event.target.value);
-    document.querySelector('#density-value').textContent = densityConfigs[densityIndex].label;
-    buildShowerhead();
-    buildFlow();
-    updateDescription();
-  });
-
-  document.querySelector('#flow-rate').addEventListener('input', event => {
-    rate = Number(event.target.value);
-    document.querySelector('#flow-value').textContent = `${rate.toFixed(1)}×`;
-    buildFlow();
+  document.querySelectorAll('[data-field]').forEach(button => {
+    button.addEventListener('click', () => {
+      const name = button.dataset.field;
+      fields[name] = !fields[name];
+      button.setAttribute('aria-pressed', String(fields[name]));
+      buildFlow();
+    });
   });
 
   const pauseButton = document.querySelector('#pause');
   function updatePause() {
-    pauseButton.textContent = paused ? '继续流动' : '暂停流动';
+    pauseButton.textContent = paused ? '继续' : '暂停';
     pauseButton.setAttribute('aria-pressed', String(paused));
-    document.querySelector('#flow-status').textContent = paused ? '流动已暂停' : '流动演示';
   }
   pauseButton.addEventListener('click', () => { paused = !paused; updatePause(); });
   updatePause();
   document.querySelector('#reset').addEventListener('click', resetView);
 
   viewport.addEventListener('keydown', event => {
-    if (!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','+','=','-'].includes(event.key)) return;
+    if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', '+', '=', '-'].includes(event.key)) return;
     event.preventDefault();
     const spherical = new T.Spherical().setFromVector3(camera.position.clone().sub(controls.target));
     if (event.key === 'ArrowLeft') spherical.theta -= 0.12;
     if (event.key === 'ArrowRight') spherical.theta += 0.12;
     if (event.key === 'ArrowUp') spherical.phi -= 0.12;
     if (event.key === 'ArrowDown') spherical.phi += 0.12;
-    if (['+','='].includes(event.key)) spherical.radius *= 0.9;
+    if (['+', '='].includes(event.key)) spherical.radius *= 0.9;
     if (event.key === '-') spherical.radius *= 1.1;
     spherical.phi = T.MathUtils.clamp(spherical.phi, controls.minPolarAngle, controls.maxPolarAngle);
     spherical.radius = T.MathUtils.clamp(spherical.radius, controls.minDistance, controls.maxDistance);
@@ -301,22 +316,15 @@ function start(T, OrbitControls) {
     controls.update();
   });
 
-  const labels = [
-    ['inlet', new T.Vector3(0.4, 2.95, 0)],
-    ['shower', new T.Vector3(1.95, 1.15, 0)],
-    ['wafer', new T.Vector3(1.48, -1.05, 0)],
-    ['outlet', new T.Vector3(0.45, -3.05, 0)]
-  ].map(([name, point]) => ({ element: document.querySelector(`[data-label="${name}"]`), point }));
-
   let time = 0;
   let last = performance.now();
   let running = true;
-  const projected = new T.Vector3();
   const particlePoint = new T.Vector3();
 
   function frame(now) {
     if (!running) return;
-    const dt = Math.min((now - last) / 1000, 0.05); last = now;
+    const dt = Math.min((now - last) / 1000, 0.05);
+    last = now;
     if (!paused && !document.hidden) time += dt;
     controls.update();
 
@@ -329,25 +337,31 @@ function start(T, OrbitControls) {
           const mid = (lo + hi) >> 1;
           if (path.times[mid] > travel) hi = mid; else lo = mid;
         }
-        const denom = Math.max(1e-6, path.times[hi] - path.times[lo]);
-        const fraction = (travel - path.times[lo]) / denom;
+        const denominator = Math.max(1e-6, path.times[hi] - path.times[lo]);
+        const fraction = (travel - path.times[lo]) / denominator;
         particlePoint.copy(path.points[lo]).lerp(path.points[hi], fraction);
-        dummy.position.copy(particlePoint); dummy.updateMatrix();
+        dummy.position.copy(particlePoint);
+        dummy.updateMatrix();
         particles.setMatrixAt(instance, dummy.matrix);
-        particles.setColorAt(instance, speedColor(mix(path.speeds[lo], path.speeds[hi], fraction), color));
+
+        const speed = mix(path.speeds[lo], path.speeds[hi], fraction);
+        const reaction = mix(path.reactions[lo], path.reactions[hi], fraction);
+        speedColor(speed, color);
+        if (fields.chemistry && reaction > 0) color.lerp(chemistryColor, reaction * 0.86);
+        particles.setColorAt(instance, color);
         instance++;
       }
     }
     particles.instanceMatrix.needsUpdate = true;
     if (particles.instanceColor) particles.instanceColor.needsUpdate = true;
 
-    for (const label of labels) {
-      projected.copy(label.point).project(camera);
-      const x = (projected.x * 0.5 + 0.5) * viewport.clientWidth + 8;
-      const y = (-projected.y * 0.5 + 0.5) * viewport.clientHeight - 12;
-      label.element.style.transform = `translate(${Math.max(5, Math.min(viewport.clientWidth - label.element.offsetWidth - 5, x))}px,${y}px)`;
-      label.element.style.visibility = projected.z < 1 && y > 0 && y < viewport.clientHeight - 40 ? 'visible' : 'hidden';
+    if (fields.chemistry) {
+      reactionPoints.rotation.y += dt * 0.08;
+      const pulse = 0.46 + 0.12 * Math.sin(time * 1.8);
+      reactionPointsMaterial.opacity = (fields.plasma ? 0.72 : 0.52) + 0.08 * Math.sin(time * 1.6);
+      reactionMaterial.opacity = pulse * (fields.plasma ? 0.75 : 0.55);
     }
+    if (fields.plasma) plasmaLineMaterial.opacity = 0.34 + 0.10 * Math.sin(time * 1.4);
 
     renderer.render(scene, camera);
     requestAnimationFrame(frame);
@@ -361,7 +375,6 @@ function start(T, OrbitControls) {
 
   loading.hidden = true;
   viewport.dataset.ready = 'true';
-  updateDescription();
   resetView();
   requestAnimationFrame(frame);
 }
