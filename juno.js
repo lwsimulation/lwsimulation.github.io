@@ -1,4 +1,19 @@
 (() => {
+  const header = document.querySelector('.site-header');
+  if (header) {
+    header.querySelector('.back-home')?.remove();
+    let nav = header.querySelector('nav[aria-label="主导航"]');
+    if (!nav) {
+      nav = document.createElement('nav');
+      nav.setAttribute('aria-label', '主导航');
+      header.append(nav);
+    }
+    nav.innerHTML = '<a href="index.html">首页</a><a href="tools.html">工具与资源</a><button type="button" data-contact>联系我</button>';
+    const contactScript = document.createElement('script');
+    contactScript.src = 'contact.js?v=20260924-1';
+    document.head.append(contactScript);
+  }
+
   const story = document.querySelector('.story');
   const chapters = [...story.querySelectorAll('.chapter')];
   const dots = [...document.querySelectorAll('.chapter-nav a')];
