@@ -14,6 +14,30 @@
     document.head.append(contactScript);
   }
 
+  // Personal LWS mark: fixed lower-right signature on the Juno story page.
+  const brandMark = document.createElement('img');
+  brandMark.className = 'juno-brandmark';
+  brandMark.src = 'assets/lws-juno-logo.webp?v=20260924-1';
+  brandMark.alt = 'Liu Wansuo Simulation';
+  brandMark.decoding = 'async';
+  document.body.append(brandMark);
+  const brandStyle = document.createElement('style');
+  brandStyle.textContent = `
+    .juno-brandmark{
+      position:fixed;right:28px;bottom:66px;z-index:11;
+      width:clamp(180px,16vw,250px);height:auto;
+      opacity:.78;pointer-events:none;user-select:none;
+      filter:drop-shadow(0 4px 14px rgba(33,67,103,.08));
+    }
+    @media(max-width:900px){
+      .juno-brandmark{right:12px;bottom:64px;width:150px;opacity:.72}
+    }
+    @media(max-width:560px){
+      .juno-brandmark{right:8px;bottom:58px;width:118px;opacity:.66}
+    }
+  `;
+  document.head.append(brandStyle);
+
   const story = document.querySelector('.story');
   const chapters = [...story.querySelectorAll('.chapter')];
   const dots = [...document.querySelectorAll('.chapter-nav a')];
