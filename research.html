@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>沉积腔室 · 多物理场交互 | lwSimulation</title>
+  <meta name="description" content="拖拽探索透明沉积腔室，观察气体经过喷淋板形成射流，以及多个物理场叠加后的流动示意。">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="research.css?v=20260924-1">
+  <script type="importmap">{"imports":{"three":"./assets/vendor/three.module.min.js"}}</script>
+</head>
+<body>
+  <header class="lab-header"><a href="index.html" class="back">← 返回主页</a><span class="wordmark">lw<span>Simulation</span></span><span class="edition">INTERACTIVE RESEARCH / 01</span></header>
+  <main class="laboratory">
+    <aside class="controls" aria-label="流场控制">
+      <div class="eyebrow">DEPOSITION CHAMBER</div>
+      <h1>看见流动，<br>理解耦合。</h1>
+      <p class="intro">透明沉积腔室中的<br>多物理场交互探索</p>
+      <div class="section-heading"><h2>叠加物理影响</h2><span id="field-count">0 / 3</span></div>
+      <p class="control-note">可同时开启，再次点击移除</p>
+      <div class="field-buttons">
+        <button type="button" data-field="thermal" aria-pressed="false"><span class="field-icon thermal">T</span><span><strong>温度场</strong><small>近壁热扰动 · 射流展宽</small></span><span class="toggle-mark" aria-hidden="true">+</span></button>
+        <button type="button" data-field="rotation" aria-pressed="false"><span class="field-icon rotation">ω</span><span><strong>基片旋转</strong><small>切向拖曳 · 螺旋流动</small></span><span class="toggle-mark" aria-hidden="true">+</span></button>
+        <button type="button" data-field="electric" aria-pressed="false"><span class="field-icon electric">E</span><span><strong>等离子体电场</strong><small>有效体力 · 定向加速</small></span><span class="toggle-mark" aria-hidden="true">+</span></button>
+      </div>
+      <div class="flow-control"><label for="flow-rate">入口流量 <output id="flow-value" for="flow-rate">1.0×</output></label><input id="flow-rate" type="range" min="0.5" max="1.8" step="0.1" value="1"><div class="range-labels"><span>柔和</span><span>强劲</span></div></div>
+      <p class="field-description" id="field-description" aria-live="polite">基础压差驱动：气体自顶部进入，经喷淋板分流，加速成束，绕过基片后从底部排出。</p>
+      <p class="model-note">概念流动示意，非 CFD 求解。颜色表示模型内的相对流速；电场影响仅示意等离子体条件下的有效作用。</p>
+    </aside>
+    <section class="stage" aria-label="可旋转的三维沉积腔室">
+      <div class="stage-top"><span class="live-dot"></span><span id="flow-status">流动演示</span><span class="stage-caption">透明腔室 / 三维视图</span></div>
+      <div id="viewport" tabindex="0" role="group" aria-label="三维腔室。拖拽或方向键旋转，滚轮或加减键缩放。" aria-describedby="interaction-hint">
+        <div id="loading" role="status">正在构建三维腔室…</div>
+        <div id="render-error" hidden><strong>暂时无法显示三维视图</strong><p>请使用支持 WebGL 2 的浏览器并开启图形加速，然后重新加载页面。</p><button type="button" id="reload">重新加载</button></div>
+        <span class="part-label" data-label="inlet">入口 <i>INLET</i></span>
+        <span class="part-label" data-label="shower">喷淋板 <i>SHOWERHEAD</i></span>
+        <span class="part-label" data-label="wafer">基片 <i>SUBSTRATE</i></span>
+        <span class="part-label" data-label="outlet">底部排气 <i>EXHAUST</i></span>
+      </div>
+      <div class="mobile-fields" aria-label="叠加物理影响"><span>叠加物理影响 · 可多选</span></div>
+      <div class="stage-bottom"><div class="legend"><span>相对流速</span><div class="color-ramp"></div><div class="legend-labels"><span>低</span><span>高</span></div></div><div class="view-actions"><button type="button" id="pause" aria-pressed="false">暂停流动</button><button type="button" id="reset">重置视角</button></div></div>
+      <p class="interaction-hint" id="interaction-hint">拖拽旋转 · 滚轮缩放 · 双指缩放</p>
+    </section>
+  </main>
+  <noscript><p class="noscript">请启用 JavaScript 以查看三维交互演示。</p></noscript>
+  <script type="module" src="research.js?v=20260924-1"></script>
+</body>
+</html>
