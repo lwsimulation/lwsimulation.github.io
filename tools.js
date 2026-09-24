@@ -54,6 +54,7 @@
       modes.forEach(mode => mode.classList.toggle('active', mode.id === `mode-${tab.dataset.mode}`));
       $('calc-error').textContent = '';
       $('kn-result').classList.remove('show');
+      $('transition-contact').classList.remove('show');
     });
   });
 
@@ -98,6 +99,12 @@
     return '当前 Kn 接近常用流态分区边界。实际工程中还应结合局部 Kn、几何尺度、壁面条件及非平衡程度判断模型适用性。';
   }
 
+  function shouldShowTransitionContact(kn) {
+    const inTransition = kn >= 0.1 && kn < 10;
+    const nearTransitionBoundary = (kn >= 0.1 / 1.5 && kn < 0.1) || (kn >= 10 && kn <= 10 * 1.5);
+    return inTransition || nearTransitionBoundary;
+  }
+
   function render(kn, lambda, source) {
     const regime = classify(kn);
     $('result-kn').textContent = formatNumber(kn);
@@ -106,6 +113,9 @@
     $('result-range').textContent = regime.range;
     $('result-desc').textContent = regime.desc;
     $('result-method').textContent = regime.method;
+
+    const contact = $('transition-contact');
+    contact.classList.toggle('show', shouldShowTransitionContact(kn));
 
     const warning = boundaryWarning(kn);
     const warningEl = $('result-warning');
@@ -140,6 +150,7 @@
       active === 'simple' ? calculateSimple() : calculateAdvanced();
     } catch (err) {
       $('kn-result').classList.remove('show');
+      $('transition-contact').classList.remove('show');
       $('calc-error').textContent = err.message;
     }
   });
@@ -159,5 +170,6 @@
     $('advanced-length-unit').value = 'um';
     $('calc-error').textContent = '';
     $('kn-result').classList.remove('show');
+    $('transition-contact').classList.remove('show');
   });
 })();
