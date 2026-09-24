@@ -1,14 +1,200 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>工具与资源 | lwSimulation</title>
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="styles.css?v=20260924-2"><link rel="stylesheet" href="brand.css?v=20260924-1">
+  <meta name="description" content="lwSimulation 工具与资源：Knudsen 数计算、流态判断与数值方法建议。">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css?v=20260924-2">
+  <link rel="stylesheet" href="brand.css?v=20260924-1">
+  <link rel="stylesheet" href="tools.css?v=20260924-1">
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="index.html" aria-label="lwSimulation 首页"><img class="brand-logo" src="assets/lwsimulation-logo.png" width="1254" height="1254" alt="lwSimulation"></a>
-    <nav aria-label="主导航"><a href="index.html">首页</a><a href="index.html#research">研究方向</a><a class="active" aria-current="page" href="tools.html">资源与工具</a><a href="index.html#about">关于我</a></nav>
+    <a class="brand" href="index.html" aria-label="lwSimulation 首页">
+      <img class="brand-logo" src="assets/lwsimulation-logo.png" width="1254" height="1254" alt="lwSimulation">
+    </a>
+    <nav aria-label="主导航">
+      <a href="index.html">首页</a>
+      <a href="index.html#research">研究方向</a>
+      <a class="active" aria-current="page" href="tools.html">资源与工具</a>
+      <a href="index.html#about">关于我</a>
+    </nav>
   </header>
-  <main class="tools-main"><h1>工具与资源<span lang="en">Tools</span></h1><p>后续逐步加入仿真与计算工具</p><a class="button secondary" href="index.html">← 返回首页</a></main>
-</body></html>
+
+  <main class="tools-shell">
+    <section class="tools-hero">
+      <div class="tools-hero-copy">
+        <p class="tools-kicker">ENGINEERING CALCULATION TOOLS</p>
+        <h1>工具与资源 <span lang="en">Tools & Resources</span></h1>
+        <p>面向真空、跨流态输运与数值仿真的轻量计算工具。第一项工具用于估算 Knudsen 数、判断流态，并给出可能适用的数值方法。</p>
+      </div>
+      <a class="tools-home-link" href="index.html">← 返回主页</a>
+    </section>
+
+    <div class="tools-grid">
+      <section class="tool-panel" aria-labelledby="kn-title">
+        <div class="tool-heading">
+          <span class="tool-number">01</span>
+          <div>
+            <h2 id="kn-title">Knudsen 数计算器</h2>
+            <p>Kn = λ / L，用于衡量气体稀薄程度以及连续介质假设是否仍然适用。</p>
+          </div>
+        </div>
+
+        <div class="mode-tabs" role="tablist" aria-label="计算方式">
+          <button class="mode-tab active" type="button" data-mode="simple">简单公式：已知平均自由程</button>
+          <button class="mode-tab" type="button" data-mode="advanced">复杂公式：由 p、T、d 计算</button>
+        </div>
+
+        <div class="calc-mode active" id="mode-simple">
+          <div class="formula-card">
+            <div class="formula">Kn = λ / L</div>
+            <div class="formula-caption">直接由平均自由程与特征长度计算。</div>
+          </div>
+          <div class="param-notes">
+            <div class="param-note"><b>Kn</b>：Knudsen 数，无量纲。</div>
+            <div class="param-note"><b>λ</b>：分子平均自由程，长度单位可选 m、mm、μm、nm。</div>
+            <div class="param-note"><b>L</b>：特征长度，例如微通道直径、孔径或局部几何尺度，长度单位可选 m、mm、μm、nm。</div>
+          </div>
+
+          <div class="input-grid">
+            <div class="input-group">
+              <label for="simple-lambda">平均自由程 λ</label>
+              <div class="input-row">
+                <input id="simple-lambda" type="number" min="0" step="any" value="65" inputmode="decimal">
+                <select id="simple-lambda-unit" aria-label="平均自由程单位">
+                  <option value="m">m</option><option value="mm">mm</option><option value="um">μm</option><option value="nm" selected>nm</option>
+                </select>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="simple-length">特征长度 L</label>
+              <div class="input-row">
+                <input id="simple-length" type="number" min="0" step="any" value="10" inputmode="decimal">
+                <select id="simple-length-unit" aria-label="特征长度单位">
+                  <option value="m">m</option><option value="mm">mm</option><option value="um" selected>μm</option><option value="nm">nm</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="calc-mode" id="mode-advanced">
+          <div class="formula-card">
+            <div class="formula">λ = k<sub>B</sub>T / (√2 π d<sup>2</sup> p), &nbsp; Kn = λ / L</div>
+            <div class="formula-caption">基于理想气体硬球模型先估算平均自由程，再计算 Kn。</div>
+          </div>
+          <div class="param-notes">
+            <div class="param-note"><b>k<sub>B</sub></b>：Boltzmann 常数，1.380649 × 10<sup>−23</sup> J/K。</div>
+            <div class="param-note"><b>T</b>：气体绝对温度，单位 K。</div>
+            <div class="param-note"><b>p</b>：气体绝对压力，可输入 Pa、kPa、mbar 或 Torr。</div>
+            <div class="param-note"><b>d</b>：分子有效碰撞直径，可输入 nm 或 Å；它是模型参数，不同资料可能略有差异。</div>
+            <div class="param-note"><b>λ</b>：计算得到的分子平均自由程，单位 m。</div>
+            <div class="param-note"><b>L</b>：特征长度，例如通道高度、孔径或局部尺度，单位可选 m、mm、μm、nm。</div>
+          </div>
+
+          <div class="input-grid">
+            <div class="input-group full">
+              <label for="gas-preset">常用气体预设</label>
+              <select id="gas-preset">
+                <option value="air">Air / 空气（d ≈ 0.365 nm）</option>
+                <option value="N2" selected>N₂ / 氮气（d ≈ 0.364 nm）</option>
+                <option value="Ar">Ar / 氩气（d ≈ 0.340 nm）</option>
+                <option value="He">He / 氦气（d ≈ 0.260 nm）</option>
+                <option value="H2">H₂ / 氢气（d ≈ 0.289 nm）</option>
+                <option value="custom">自定义</option>
+              </select>
+              <p class="preset-help">预设值仅用于快速估算；严谨计算应采用与你所用碰撞模型一致的有效分子直径。</p>
+            </div>
+
+            <div class="input-group">
+              <label for="pressure">绝对压力 p</label>
+              <div class="input-row">
+                <input id="pressure" type="number" min="0" step="any" value="100" inputmode="decimal">
+                <select id="pressure-unit" aria-label="压力单位">
+                  <option value="Pa" selected>Pa</option><option value="kPa">kPa</option><option value="mbar">mbar</option><option value="Torr">Torr</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="temperature">绝对温度 T</label>
+              <div class="input-row single"><input id="temperature" type="number" min="0" step="any" value="300" inputmode="decimal" aria-describedby="temperature-unit"></div>
+              <p class="preset-help" id="temperature-unit">单位：K</p>
+            </div>
+
+            <div class="input-group">
+              <label for="molecular-diameter">分子有效直径 d</label>
+              <div class="input-row">
+                <input id="molecular-diameter" type="number" min="0" step="any" value="0.364" inputmode="decimal">
+                <select id="diameter-unit" aria-label="分子直径单位"><option value="nm" selected>nm</option><option value="A">Å</option></select>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="advanced-length">特征长度 L</label>
+              <div class="input-row">
+                <input id="advanced-length" type="number" min="0" step="any" value="100" inputmode="decimal">
+                <select id="advanced-length-unit" aria-label="特征长度单位">
+                  <option value="m">m</option><option value="mm">mm</option><option value="um" selected>μm</option><option value="nm">nm</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="calc-actions">
+          <button class="calc-button" id="calculate-kn" type="button">计算 Kn</button>
+          <button class="reset-button" id="reset-kn" type="button">恢复示例值</button>
+        </div>
+        <p class="error-text" id="calc-error" role="alert"></p>
+
+        <section class="result-card" id="kn-result" aria-live="polite">
+          <div class="result-top">
+            <div class="result-metric">
+              <span class="result-label">Knudsen 数 Kn</span>
+              <div class="result-value" id="result-kn">—</div>
+            </div>
+            <div class="result-metric">
+              <span class="result-label">平均自由程 λ</span>
+              <div class="result-value" id="result-lambda">—</div>
+            </div>
+          </div>
+          <div class="regime-box">
+            <div class="regime-title">
+              <span class="regime-name" id="result-regime">—</span>
+              <span class="regime-range" id="result-range">—</span>
+            </div>
+            <p class="regime-desc" id="result-desc"></p>
+            <div class="method-box">
+              <strong>可能适用的计算方法</strong>
+              <p id="result-method"></p>
+            </div>
+            <div class="result-warning" id="result-warning"></div>
+          </div>
+        </section>
+      </section>
+
+      <aside class="guide-panel" aria-label="流态判断参考">
+        <h3>常用流态划分</h3>
+        <div class="regime-scale">
+          <div class="scale-item"><b>连续流</b><span>Kn &lt; 0.01 · NS / 常规 CFD</span></div>
+          <div class="scale-item"><b>滑移流</b><span>0.01 ≤ Kn &lt; 0.1 · 滑移边界 NS</span></div>
+          <div class="scale-item"><b>过渡流</b><span>0.1 ≤ Kn &lt; 10 · DSMC 或 NS–DSMC 混合</span></div>
+          <div class="scale-item"><b>自由分子流</b><span>Kn ≥ 10 · DSMC / TPMC / 自由分子模型</span></div>
+        </div>
+        <p class="guide-note">这里采用的是常见工程划分。对微通道、喷口、强梯度流动或跨流态系统，单个全局 Kn 只能作为初步判断；实际建模还应关注局部 Kn、壁面条件、压力梯度以及非平衡效应。</p>
+      </aside>
+    </div>
+
+    <section class="next-tools">
+      <strong>更多工具将继续加入</strong>
+      <span>后续可扩展平均自由程、Reynolds/Mach 数、真空抽速与流导、跨流态判据、单位换算等工程计算。</span>
+    </section>
+  </main>
+
+  <script src="tools.js?v=20260924-1" defer></script>
+</body>
+</html>
