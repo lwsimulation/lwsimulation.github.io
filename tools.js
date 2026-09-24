@@ -172,4 +172,64 @@
     $('kn-result').classList.remove('show');
     $('transition-contact').classList.remove('show');
   });
+
+  // Use the same contact interaction pattern as the homepage instead of opening mail directly.
+  function setupResearchContactDialog() {
+    const trigger = document.querySelector('.transition-contact a');
+    if (!trigger) return;
+
+    const dialog = document.createElement('dialog');
+    dialog.id = 'contact-dialog';
+    dialog.setAttribute('aria-labelledby', 'contact-title');
+    dialog.setAttribute('aria-describedby', 'contact-note');
+    dialog.innerHTML = `
+      <button class="dialog-close" aria-label="关闭" type="button">×</button>
+      <span class="contact-label" lang="en">CONTACT</span>
+      <h2 id="contact-title">讨论研发需求</h2>
+      <p id="contact-note">如果你的系统涉及过渡流、跨流态输运或 NS–DSMC 耦合，可以通过邮箱与我联系。</p>
+      <label class="email-label" for="contact-email">电子邮箱</label>
+      <input id="contact-email" type="text" value="loerwalson@sina.com" readonly spellcheck="false" aria-label="电子邮箱地址">
+      <div class="contact-actions">
+        <button class="button primary" id="copy-email" type="button">复制邮箱地址</button>
+        <a class="email-link" href="mailto:loerwalson@sina.com?subject=%E8%B7%A8%E6%B5%81%E6%80%81%E4%BB%BF%E7%9C%9F%E7%A0%94%E5%8F%91%E9%9C%80%E6%B1%82%E5%92%A8%E8%AF%A2">发送邮件 ↗</a>
+      </div>
+      <p id="copy-status" role="status" aria-live="polite"></p>`;
+    document.body.append(dialog);
+
+    const emailField = dialog.querySelector('#contact-email');
+    const copyButton = dialog.querySelector('#copy-email');
+    const copyStatus = dialog.querySelector('#copy-status');
+
+    trigger.addEventListener('click', event => {
+      event.preventDefault();
+      copyStatus.textContent = '';
+      copyButton.textContent = '复制邮箱地址';
+      dialog.showModal();
+      copyButton.focus();
+    });
+
+    copyButton.addEventListener('click', async () => {
+      let copied = false;
+      try {
+        await navigator.clipboard.writeText(emailField.value);
+        copied = true;
+      } catch {
+        emailField.focus();
+        emailField.select();
+        try { copied = document.execCommand('copy'); } catch { copied = false; }
+      }
+      copyStatus.textContent = copied ? '邮箱地址已复制' : '请长按或按 Ctrl+C（Mac：⌘C）复制已选中的邮箱地址。';
+      if (copied) copyButton.textContent = '已复制';
+    });
+
+    emailField.addEventListener('click', () => emailField.select());
+    dialog.querySelector('.dialog-close').addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', event => {
+      if (event.target !== dialog) return;
+      const r = dialog.getBoundingClientRect();
+      if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) dialog.close();
+    });
+  }
+
+  setupResearchContactDialog();
 })();
