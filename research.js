@@ -1,4 +1,4 @@
-import { createGallery } from './research-gallery.js?v=20260925-2';
+import { createGallery } from './research-gallery.js?v=20260925-3';
 const viewport = document.querySelector('#viewport');
 const gallery = createGallery();
 try {

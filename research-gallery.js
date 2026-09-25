@@ -1,4 +1,4 @@
-import { topics, anchors } from './research-content.js?v=20260925-2';
+import { topics, anchors } from './research-content.js?v=20260925-3';
 import { illustrate } from './research-illustration.js';
 export function createGallery() {
  const layer=document.querySelector('#research-hotspots'),card=document.querySelector('#research-card'),index=document.querySelector('#research-index'),zoom=document.querySelector('#research-zoom');
