@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>我的研究 | lwSimulation</title>
-  <meta name="description" content="PECVD 腔室中的流动、温度、结构、等离子体与化学反应多场叠加交互示意。">
+  <meta name="description" content="PECVD 腔室中的流动、温度、结构、等离子体与化学反应多场耦合交互示意。">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css?v=20260924-2">
   <link rel="stylesheet" href="brand.css?v=20260924-1">
-  <link rel="stylesheet" href="research.css?v=20260924-3">
-  <script type="importmap">{"imports":{"three":"./assets/vendor/three.module.min.js"}}</script>
+  <link rel="stylesheet" href="research.css?v=20260925-1">
+  <link rel="modulepreload" href="assets/vendor/three.module.min.js">
 </head>
 <body class="research-page">
   <header class="site-header research-header">
@@ -19,14 +19,18 @@
 
   <main class="research-main">
     <section class="research-stage" aria-label="PECVD 多物理场交互腔室">
-      <div class="research-title"><span>PECVD CHAMBER</span><strong>多场叠加</strong></div>
-      <div class="flow-badge"><span class="live-dot"></span><span>FLOW</span></div>
+      <div class="research-title"><span>PECVD CHAMBER</span><strong>多场耦合</strong></div>
+      <button type="button" id="research-index-trigger">研究索引 <span>↗</span></button>
 
       <div id="viewport" tabindex="0" role="group" aria-label="三维 PECVD 沉积腔室。拖拽旋转视角，滚轮缩放。" aria-describedby="interaction-hint">
         <div id="loading" role="status">正在构建腔室…</div>
-        <div id="render-error" hidden><strong>三维视图暂时无法显示</strong><p>请开启浏览器图形加速后重新加载。</p><button type="button" id="reload">重新加载</button></div>
+        <div id="render-error" hidden><strong>三维视图暂时无法显示</strong><p>请检查网络与浏览器图形加速后重试。研究索引仍可浏览。</p><button type="button" id="reload">重新加载</button></div>
       </div>
 
+      <div id="research-hotspots" aria-label="模型关联研究"></div>
+      <aside id="research-card" aria-labelledby="research-card-title" hidden></aside>
+      <div class="flow-legend"><span>相对流速</span><i></i><small>低<span>高</span></small></div>
+      <div id="field-key" aria-live="polite"></div>
       <div class="field-dock" role="group" aria-label="多物理场叠加">
         <button type="button" data-field="thermal" aria-pressed="false" title="温度场：近壁热边界改变局部流动"><span class="field-symbol">T</span><span>温度</span></button>
         <button type="button" data-field="structure" aria-pressed="false" title="结构场：喷淋板孔隙形成离散射流并改变局部分布"><span class="field-symbol">S</span><span>结构</span></button>
@@ -35,16 +39,20 @@
       </div>
 
       <div class="view-actions">
+        <button type="button" id="compare" aria-pressed="false" title="按住对比基础状态">对比基础</button>
         <button type="button" id="pause" aria-pressed="false" title="暂停或继续粒子运动">暂停</button>
         <button type="button" id="reset" title="恢复默认视角">复位</button>
       </div>
       <p class="interaction-hint" id="interaction-hint">拖拽旋转 · 滚轮缩放</p>
-      <p class="concept-note">概念示意 · 非 CFD/DSMC 求解结果</p>
+      <p class="concept-note">影响示意 · 研究位置为关联标记</p>
     </section>
   </main>
 
+  <dialog id="research-index" aria-labelledby="research-index-title"><button type="button" class="dialog-dismiss" aria-label="关闭研究索引">×</button><span class="index-eyebrow">RESEARCH AT A GLANCE</span><h2 id="research-index-title">研究索引</h2><div class="research-index-list"></div></dialog>
+  <dialog id="research-zoom" aria-label="研究原图"><button type="button" class="dialog-dismiss" aria-label="关闭大图">×</button><img alt=""><p></p></dialog>
   <noscript><p class="noscript">请启用 JavaScript 以查看三维交互演示。</p></noscript>
   <script src="contact.js?v=20260924-1"></script>
-  <script type="module" src="research.js?v=20260924-3"></script>
+  <script src="research-boot.js?v=20260925-1"></script>
+  <script type="module" src="research.js?v=20260925-1"></script>
 </body>
 </html>
