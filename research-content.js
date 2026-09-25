@@ -1,5 +1,5 @@
 // Research statements and original figures are sourced from the supplied CV's 工作展示 / 项目经历.
-const fig = (n, caption) => ({ src: `assets/research/figure-${String(n).padStart(2,'0')}.webp`, caption });
+const fig = (n, caption) => ({ preview: `assets/research/preview/figure-${String(n).padStart(2,'0')}.webp`, thumbPosition: `${((n-2)%7)/6*100}% ${Math.floor((n-2)/7)/3*100}%`, src: `assets/research/figure-${String(n).padStart(2,'0')}.webp`, caption });
 export const topics = [
  {id:'teos',anchor:'inlet',title:'TEOS · 看见液化风险',short:'温压变化 → 风险位置',field:'thermal',summary:'沿着输运管路的温度与压力变化，识别潜在液化位置，辅助结构设计与选型。',detail:'通过 CFD 分析不同管路结构的温压分布，结合 TEOS 气化特性与设计路线的温压曲线，比较失温、压降等因素对应的相对液化风险。',media:[fig(6,'管路结构、温压分布与液化风险分析')],kind:'研究原图'},
  {id:'pvd',anchor:'inlet',title:'长管 PVD · 延伸输运距离',short:'沿程衰减 → 沉积均匀性',field:'chemistry',summary:'研究大长径比管道中的粒子输运与沿程衰减，关联压力分布、有效输运距离和内壁镀膜均匀性。',detail:'负责长管流场及粒子输运模型建立与分析，比较压力、流量和结构条件的影响，形成工艺与结构调控依据。这里的粒子及沉积变化用于解释研究问题，不是项目计算数据。',animation:'pipe',kind:'示意动画'},

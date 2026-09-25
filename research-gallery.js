@@ -1,4 +1,4 @@
-import { topics, anchors } from './research-content.js';
+import { topics, anchors } from './research-content.js?v=20260925-2';
 import { illustrate } from './research-illustration.js';
 export function createGallery() {
  const layer=document.querySelector('#research-hotspots'),card=document.querySelector('#research-card'),index=document.querySelector('#research-index'),zoom=document.querySelector('#research-zoom');
@@ -12,10 +12,10 @@ export function createGallery() {
  const media=card.querySelector('.research-media'),caption=card.querySelector('.research-caption');
  if(topic.animation){const canvas=document.createElement('canvas');canvas.setAttribute('role','img');canvas.setAttribute('aria-label',topic.title+'，可拖拽旋转的概念动画');media.append(canvas);stopAnimation=illustrate(canvas,topic.animation,()=>paused);caption.textContent='示意动画 · 可拖拽旋转';}
  else{let current=0;const image=document.createElement('img');image.decoding='async';image.alt=topic.media[0].caption;const enlarge=document.createElement('button');enlarge.type='button';enlarge.className='enlarge-image';enlarge.setAttribute('aria-label','放大研究原图');enlarge.append(image);media.append(enlarge);
- function change(i){current=i;image.src=topic.media[i].src;image.alt=topic.media[i].caption;caption.textContent=topic.media[i].caption;card.querySelectorAll('.media-thumb').forEach((b,j)=>b.setAttribute('aria-pressed',String(i===j)));}
+ function change(i){current=i;image.src=topic.media[i].preview;image.alt=topic.media[i].caption;caption.textContent=topic.media[i].caption;card.querySelectorAll('.media-thumb').forEach((b,j)=>b.setAttribute('aria-pressed',String(i===j)));}
  image.onerror=()=>{caption.textContent='图片暂未加载，请点击重试。';};
  enlarge.onclick=()=>{zoom.querySelector('img').src=topic.media[current].src;zoom.querySelector('img').alt=topic.media[current].caption;zoom.querySelector('p').textContent=topic.media[current].caption;zoom.showModal();};
- if(pin&&topic.media.length>1){const thumbnails=document.createElement('div');thumbnails.className='media-thumbnails';topic.media.forEach((m,i)=>{const b=document.createElement('button');b.type='button';b.className='media-thumb';b.setAttribute('aria-label',m.caption);const im=document.createElement('img');im.src=m.src;im.alt='';im.loading='lazy';b.append(im);b.onclick=()=>change(i);thumbnails.append(b);});media.after(thumbnails);}
+ if(pin&&topic.media.length>1){const thumbnails=document.createElement('div');thumbnails.className='media-thumbnails';topic.media.forEach((m,i)=>{const b=document.createElement('button');b.type='button';b.className='media-thumb';b.setAttribute('aria-label',m.caption);const im=document.createElement('span');im.className='research-thumb-image';im.style.backgroundPosition=m.thumbPosition;im.setAttribute('aria-hidden','true');b.append(im);b.onclick=()=>change(i);thumbnails.append(b);});media.after(thumbnails);}
  change(0);
  }
  const more=card.querySelector('.card-more');
